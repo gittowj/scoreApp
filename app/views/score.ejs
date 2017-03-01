@@ -1,0 +1,100 @@
+<% if(result != null) {
+             if(result.code == 1 && result.obj != null){
+                 var score = result.obj;%>
+                <br>
+                <table class="student">
+                    <tr>
+                        <td class="student_name">学校:</td>
+                        <td class="student_value"><%= score.school %></td>
+                        <td class="student_name">班级:</td>
+                        <td class="student_value"><%= score.grade + "(" + score.classId + ")" %></td>
+                    </tr>
+                    <tr>
+                        <td class="student_name">考号:</td>
+                        <td class="student_value"><%= score.no %></td>
+                        <td class="student_name">姓名:</td>
+                        <td class="student_value"><%= score.name %></td>
+                    </tr>
+                </table>
+                <br>
+                <table id="mytable" cellspacing="0" summary="The technical specifications of the Apple PowerMac G5 series">  
+                    <caption></caption>  
+                    <tr>  
+                        <th scope="col" abbr="Configurations">科目</th>  
+                        <th scope="col" abbr="Dual 1.8">分数</th>  
+                        <th scope="col" abbr="Dual 2">班级排名</th>  
+                        <th scope="col" abbr="Dual 2.5">年级排名</th>  
+                    </tr>  
+                    <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt"></th>  
+                        <td class="alt"><%= score.score %></td>  
+                        <td class="alt"><%= score.classOrder %></td>  
+                        <td class="alt"></td>  
+                    </tr>  
+                    <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">语文</th>  
+                        <td class="alt"><%= score.chineseScore %></td>  
+                        <td class="alt"><%= score.chineseGradeOrder %></td>  
+                        <td class="alt"><%= score.chineseClassOrder %></td>  
+                    </tr>  
+                    <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">数学</th>  
+                        <td class="alt"><%= score.mathScore %></td>  
+                        <td class="alt"><%= score.mathClassOrder %></td>  
+                        <td class="alt"><%= score.mathGradeOrder %></td>  
+                    </tr>  
+                        <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">英语</th>  
+                        <td class="alt"><%= score.englishScore %></td>  
+                        <td class="alt"><%= score.englishClassOrder %></td>  
+                        <td class="alt"><%= score.englishGradeOrder %></td> 
+                    </tr>  
+                    <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">地理</th>  
+                        <td class="alt"><%= score.geographyScore %></td>  
+                        <td class="alt"><%= score.geographyClassOrder  %></td>  
+                        <td class="alt"><%= score.geographyGradeOrder %></td>  
+                    </tr> 
+                    </tr>  
+                        <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">历史</th>  
+                        <td class="alt"><%= score.historyScore %></td>  
+                        <td class="alt"><%= score.historyClassOrder %></td>  
+                        <td class="alt"><%= score.historyGradeOrder %></td>  
+                    </tr>  
+                        <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">政治</th>  
+                        <td class="alt"><%= score.politicsScore %></td>  
+                        <td class="alt"><%= score.politicsClassOrder %></td>  
+                        <td class="alt"><%= score.politicsGradeOrder %></td>  
+                    </tr> 
+                    </tr>  
+                        <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">物理</th>  
+                        <td class="alt"><%= score.physicsScore %></td>  
+                        <td class="alt"><%= score.physicsClassOrder %></td>  
+                        <td class="alt"><%= score.physicsGradeOrder %></td>  
+                    </tr> 
+                    </tr>  
+                        <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">生物</th>  
+                        <td class="alt"><%= score.biologyScore %></td>  
+                        <td class="alt"><%= score.biologyClassOrder %></td>  
+                        <td class="alt"><%= score.biologyGradeOrder %></td>  
+                    </tr> 
+                    </tr>  
+                    <tr>  
+                        <th scope="row" abbr="G5 Processor" class="specalt">化学</th>  
+                        <td class="alt"><%= score.chemistryScore %></td>  
+                        <td class="alt"><%= score.chemistryClassOrder %></td>  
+                        <td class="alt"><%= score.chemistryGradeOrder %></td>  
+                    </tr>         
+                </table> 
+               
+             <% }else if(result.message != null && result.message.length  > 0 ){
+                   console.log(result + "##############gggg################3");
+                 %>
+
+                    <p><p class="ERROR_MEAASGE"><b><%= result.message%></b></p></p>
+            <% }
+         }%>  
