@@ -3,248 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>在线查分系统</title>
-    <script src="/javascripts/jquery-3.1.1.min.js"></script>
-    <script src="/javascripts/jquery.form.min.js"></script>
-    <style type="text/css"> 
-        body{ font-size:36px; line-height:24px;} 
-        .title{font-size:larger; text-align:center;} 
-        #login_click{ margin:20px 10px 10px 10px; height:40px; background:yellow;}  
-        #login_click a   
-        {  
-            text-decoration:none;  
-            background:#2f435e;  
-            color:#f2f2f2;  
-
-            padding: 10px 30px 10px 30px;  
-            font-size:20px;  
-            font-family: 微软雅黑,宋体,Arial,Helvetica,Verdana,sans-serif;  
-            font-weight:bold;  
-            border-radius:3px;  
-
-            -webkit-transition:all linear 0.30s;  
-            -moz-transition:all linear 0.30s;  
-            transition:all linear 0.30s; 
-        }  
-
-        #login_click a:hover { background:#385f9e; } 
-
-        .input_on{  
-            padding:2px 8px 0pt 3px;  
-            height:30px; 
-            width:200px;
-            border:1px solid #999;  
-            background-color:#FFFFCC;  
-        }  
-        .input_off{  
-            padding:2px 8px 0pt 3px;  
-            height:30px;
-            width:200px;
-            border:1px solid #CCC;  
-            background-color:#FFF;  
-        }  
-        .input_move{  
-            padding:2px 8px 0pt 3px;  
-            height:30px;
-            width:200px;
-            border:1px solid #999;  
-            background-color:#FFFFCC;  
-        }  
-        .input_out{  
-            padding:2px 8px 0pt 3px;  
-            height:30px;
-            width:200px;
-            border:1px solid #CCC;  
-            background-color:#FFF;  
-        }  
-        .input_table label{  
-            float:left;  
-            padding-right:10px;  
-            width:100px;  
-            line-height:22px;  
-            text-align:right;  
-            font-size:25px;  
-        }
-
-        #scoreInfo{ margin:0 auto;} 
-        .student {width: 900px; margin:0 auto;}
-        .student td{height: 60px; }
-        .student_name { width: 100px; }
-        .student_value {padding:0px 0px 0px 20px; text-align:left}
-        
-        #scoreInfo .ERROR_MEAASGE{
-            color:red;
-            text-align:center; 
-            font-size:40px;  
-        }
-
-
-
-        #mytable {   
-        padding: 0;  
-        margin:0 auto;  
-        }  
-        #mytable caption {  
-        padding: 0 0 5px 0;  
-        width: 900px;   
-        font: italic 11px;  
-        text-align: right;  
-        }  
-        #mytable th {  
-        font: bold 30px ;  
-        color: #4f6b72;  
-        border-right: 1px solid #C1DAD7;  
-        border-bottom: 1px solid #C1DAD7;  
-        border-top: 1px solid #C1DAD7;  
-        letter-spacing: 2px;  
-        text-transform: uppercase;  
-        text-align: left;  
-        padding: 6px 6px 6px 12px;  
-        background: #CAE8EA url(images/bg_header.jpg) no-repeat;  
-        height : 60px;
-        }  
-        
-        #mytable td {  
-        border-right: 1px solid #C1DAD7;  
-        border-bottom: 1px solid #C1DAD7;  
-        background: #fff;  
-        font-size:30px;  
-        padding: 6px 6px 6px 12px;  
-        color: #4f6b72;  
-        }  
-        
-        #mytable td.alt {  
-        background: #F5FAFA;  
-        color: #797268;  
-        }  
-        
-        #mytable th.specalt {  
-        border-left: 1px solid #C1DAD7;  
-        border-top: 0;  
-        background: #f5fafa url(images/bullet2.gif) no-repeat;  
-        font: bold 30px ;  
-        color: #797268;  
-        }  
- 
-    </style> 
+    <link rel="stylesheet" type="text/css" href="/javascripts/easyui/themes/metro/easyui.css">  
+    <link rel="stylesheet" type="text/css" href="/javascripts/easyui/themes/mobile.css">  
+    <link rel="stylesheet" type="text/css" href="/javascripts/easyui/themes/icon.css">  
+    <script type="text/javascript" src="/javascripts/easyui/jquery.min.js"></script>  
+    <script type="text/javascript" src="/javascripts/easyui/jquery.easyui.min.js"></script> 
+    <script type="text/javascript" src="/javascripts/easyui/jquery.easyui.mobile.js"></script>
+     <script type="text/javascript" src="/javascripts/js/jquery-1.8.0.min.js"></script>
 </head>
 <body>
-    <p class="title">学生在线查分系统</p>  
-    <table class="input_table">
-        <tr>
-            <td><label for="inp_name">考号:</label>  </td>
-            <td><input  id="inp_name" class="input_out" name="no" type="text" onfocus="this.className='input_on';this.onmouseout=''" onblur="this.className='input_off';this.onmouseout=function(){this.className='input_out'};" onmousemove="this.className='input_move'" onmouseout="this.className='input_out'"/></td>
-            <td><label for="inp_name">姓名:</label></td>
-            <td><input id="inp_name" class="input_out" name="name" type="text" onfocus="this.className='input_on';this.onmouseout=''" onblur="this.className='input_off';this.onmouseout=function(){this.className='input_out'};" onmousemove="this.className='input_move'"     onmouseout="this.className='input_out'"/><td>
-            <td> 
-            <!--<button id="search_click">查询</button>-->
-                <div id="login_click">  
-                    <a id="btlogin" href="javascript:void(0);" onclick="searchScore();return false;">查 询</a>  
-                </div>
-            
-            </td>
-        </tr>
-    </table>
+    <div class="m-toolbar">
+				<div class="m-title">TextBox</div>
+			</div>
+		</header>
+		<ul class="m-list">
+			<li>
+				<input class="easyui-textbox" style="width:100%" data-options="
+						label: 'Standard TextBox:',
+						labelPosition: 'top',
+						prompt: 'Search...'
+						">
+			</li>
+			<li>
+				<input class="easyui-textbox" style="width:100%" data-options="
+						label: 'Icon:',
+						labelPosition: 'top',
+						iconCls: 'icon-search'
+						">
+			</li>
+			<li>
+				<input class="easyui-textbox" style="width:100%" data-options="
+						label: 'Button:',
+						labelPosition: 'top',
+						buttonText: 'Search'
+						">
+			</li>
+		</ul>
 
-
-    <div id="scoreInfo"> 
-    <!--<p class="ERROR_MEAASGE"><b>JJJJJ</b></p>
-     <br>
-    <table class="student">
-        <tr>
-            <td class="student_name">考号</td>
-            <td class="student_value">201491145</td>
-            <td class="student_name">考号</td>
-            <td class="student_value">201491145</td>
-        </tr>
-         <tr>
-            <td class="student_name">考号</td>
-            <td class="student_value">201491145</td>
-            <td class="student_name">考号</td>
-            <td class="student_value">201491145</td>
-        </tr>
-    </table>
-    <br>
-    <table id="mytable" cellspacing="0" summary="The technical specifications of the Apple PowerMac G5 series">  
-        <caption></caption>  
-        <tr>  
-            <th scope="col" abbr="Configurations">科目</th>  
-            <th scope="col" abbr="Dual 1.8">分数</th>  
-            <th scope="col" abbr="Dual 2">班级排名</th>  
-            <th scope="col" abbr="Dual 2.5">排名</th>  
-        </tr>   
-        <tr>  
-            <th scope="row" abbr="G5 Processor" class="specalt">语文</th>  
-            <td class="alt">345.89</td>  
-            <td class="alt">45.89</td>  
-            <td class="alt">45.89</td>  
-        </tr>  
-        <tr>  
-            <th scope="row" abbr="G5 Processor" class="specalt">数学</th>  
-            <td class="alt">345.89</td>  
-            <td class="alt">45.89</td>  
-            <td class="alt">45.89</td>  
-        </tr>  
-            <tr>  
-            <th scope="row" abbr="G5 Processor" class="specalt">英语</th>  
-            <td class="alt">345.89</td>  
-            <td class="alt">45.89</td>  
-            <td class="alt">45.89</td>  
-        </tr>  
-            <tr>  
-            <th scope="row" abbr="G5 Processor" class="specalt">地理</th>  
-            <td class="alt">345.89</td>  
-            <td class="alt">45.89</td>  
-            <td class="alt">45.89</td>  
-        </tr>  
-            <tr>  
-            <th scope="row" abbr="G5 Processor" class="specalt">历史</th>  
-            <td class="alt">345.89</td>  
-            <td class="alt">45.89</td>  
-            <td class="alt">45.89</td>  
-        </tr> 
-        </tr>  
-            <tr>  
-            <th scope="row" abbr="G5 Processor" class="specalt">历史</th>  
-            <td class="alt">345.89</td>  
-            <td class="alt">45.89</td>  
-            <td class="alt">45.89</td>  
-        </tr> 
-        </tr>  
-            <tr>  
-            <th scope="row" abbr="G5 Processor" class="specalt">历史</th>  
-            <td class="alt">345.89</td>  
-            <td class="alt">45.89</td>  
-            <td class="alt">45.89</td>  
-        </tr> 
-        </tr>  
-            <tr>  
-            <th scope="row" abbr="G5 Processor" class="specalt">历史</th>  
-            <td class="alt">345.89</td>  
-            <td class="alt">45.89</td>  
-            <td class="alt">45.89</td>  
-        </tr>         
-    </table> -->
-
-            
-    </div>                                                
-</body>
- <script>
-    function searchScore(){
-        $.ajax({
-                url: '/searchScore?no=' + $('input[name="no"]').val() + '&name=' + $('input[name="name"]').val(),
-                type: 'POST',
-                data: null,
-                // async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(data){
-                     $('#scoreInfo').html(data);
-                },
-                error: function(){
-                        $('#scoreInfo').html("与服务器通信发生错误");
-                }
-            });
-    }
- </script>
+	</div>
+</body>	
 </html>

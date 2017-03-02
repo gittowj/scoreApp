@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>学生列表</title>
+    <title>在线查分系统</title>
     <script src="/javascripts/jquery-3.1.1.min.js"></script>
     <script src="/javascripts/ajaxfileupload.js"></script>
      <script src="/javascripts/laypage/laypage.js"></script>
@@ -52,6 +52,11 @@ td.alt {
  
 }  
 
+
+td.score_value {
+    width: 40px;
+    text-align: right;
+} 
  
 </style> 
 </head>
@@ -63,56 +68,48 @@ td.alt {
         </label>
         <label>
             <span>考 号:</span>
-            <input id="no" type="text" name="no" placeholder="学号" />
+            <input id="no" type="text" name="no" placeholder="考号" />
         </label>
         <label>
             <span>姓 名:</span>
             <input id="name" type="text" name="name" placeholder="姓 名" />
         </label>
         <input type="hidden" id="hidFileName" /> 
-        <input type="button" id="Refresh" value="刷新" />
+        <input type="button" id="RefreshScore" value="刷新" />
+        <input type="button" id="btnUploadFile" value="导入成绩" /> 
     </div> 
     
     <br>
-    <div id="studentList"></div>
-    <div id="studentPage"></div>
+    <div id="scoreList"></div>
+    <div id="scorePage"></div>
 </body>
 <script> 
 
+// wait for the DOM to be loaded 
+   var $pageCount = 0;
+   var $pageIndex = 1;
+   var $nums = 20; //每页出现的数量
+   var $scoreRefreshWhere = "";
    $(document).ready(function () {
-       param = '{"page":1, "rows": 20}';
-        $('#Refresh').click(function(){
-
-            var formdata = {  
-                    "actId" : 1,  
-                    "proId" : 1,  
-                    "channel_price" : 1,  
-                    "sale_num" : 1,  
-                    "restrict_num" : 1  
-                };  
-
-             var jsonstr = JSON.stringify(formdata);
-            $.ajax({  
-                type: "POST",  
-                url: "/admin/getScoreList",  
-                contentType: "application/json; charset=utf-8",  
-                data: jsonstr,  
-                dataType: "json",  
-                success: function (message) {  
-                    //alert("回执信息为：" + message);  
-                    //alert("哈哈：" + message.Success);  
-  
-                   if (true == message.Success) {  
-                        alert("保存成功");  
-                    } else {  
-                        alert("保存失败");  
-                    }  
-                },  
-                error: function (message) {  
-                    $("#request-process-patent").html("提交数据失败！");  
-                }  
-            });  
-            return;
+        $('#RefreshScore').click(function(){
+            $scoreRefreshWhere = getSearchWhere();
+            $.ajax({
+                    url: '/admin/getScore?scoreCount' + $scoreRefreshWhere,
+                    type: 'POST',
+                    data: null,
+                    // async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data){
+                        $pageCount = data.pageCount;
+                        initPage();
+                    },
+                    error: function(){
+                          $('#scoreList').html("与服务器通信发生错误");
+                    }
+            });
+            return false;
         });
 
         var btnFile = document.getElementById("btnUploadFile"); 
@@ -121,6 +118,115 @@ td.alt {
         
  
     });
+
+//文档上传 
+function g_AjxUploadFile(btn, hidPut, action) { 
+    var button = btn, interval; 
+    new AjaxUpload(button, { 
+        action: "/admin/uploadScore", 
+        data: {}, 
+        name: 'file', 
+        responseType: "json",
+        onSubmit: function(file, ext) { 
+            if (!(ext && /^(rar|zip|pdf|pdfx|txt|csv|xls|xlsx|doc|docx|RAR|ZIP|PDF|PDFX|TXT|CSV|XLS|XLSX|DOC|DOCX)$/.test(ext))) { 
+                alert("您上传的文档格式不对，请重新选择！"); 
+                return false; 
+            } 
+        }, 
+        onComplete: function(file, response) { 
+            flagValue = response; 
+            if (flagValue == "1") { 
+                alert("您上传的文档格式不对，请重新选择！"); 
+            } 
+            else if (flagValue == "2") { 
+                alert("您上传的文档大于2M，请重新选择！"); 
+            } 
+            else if (flagValue == "3") { 
+                alert("文档上传失败！"); 
+            } 
+            else { 
+                hidPut.value = response; 
+                alert(response.rtnInfo);
+            } 
+        } 
+    }); 
+} 
+
+function getSearchWhere(){
+    var $where = "";
+    var $obj = $("#school").val();
+    if($("#school").val()){
+        $where += "&school=" + $("#school").val();
+    }
+
+    if($("#no").val()){
+        $where += "&no=" + $("#no").val();
+    }
+
+    if($("#name").val()){
+        $where += "&name=" + $("#name").val();
+    }
+
+    return $where;
+}
+
+
+    function getPage($pageSize){
+        $.ajax({
+            url: '/admin/getScoreList?pageCount=' + $nums + "&page=" + $pageSize + $scoreRefreshWhere,
+            type: 'POST',
+            data: null,
+            async: true,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(data){
+                    $('#scoreList').html(data);
+            },
+            error: function(){
+                    $('#scoreList').html("与服务器通信发生错误");
+            }
+        });
+    }
+
+function initPage(){
+    //调用分页
+    laypage({
+        cont: 'scorePage',
+        pages: Math.ceil($pageCount/$nums),
+        jump: function(obj){
+            $pageIndex = obj.curr;
+            getPage(obj.curr);
+            
+        }
+    })
+}
+
+function removeRow(Obj, id){        
+    $.ajax({
+        url: '/admin/deleteScore?id=' + id,
+        type: 'POST',
+        data: null,
+        // async: false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(data){
+            if(data.rtnCode == 0){
+                alert(data.rtnInfo);
+            }else{
+                //var tr=Obj.parentNode.parentNode; 
+                //var tbody=tr.parentNode; 
+                //tbody.removeChild(tr); 
+                getPage($pageIndex);
+            }
+        },
+        error: function(){
+            alert("删除失败");
+        }
+    });
+    return false;
+}
 
 </script>
 </html>

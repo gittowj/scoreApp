@@ -10,6 +10,7 @@ var config = require('./conf/config');
 var routes = require('./routes/index'); 
 var users = require('./routes/users');
 var admin = require('./routes/admin');
+var upload = require('./routes/upload');
 //var score = require('./routes/score');
 var signin = require('./routes/signin');
 
@@ -52,11 +53,7 @@ app.use(session({
   }
 }));
 
-// // 处理表单及文件上传的中间件
-// app.use(require('express-formidable')({
-//   // uploadDir: path.join(__dirname, 'public/img'),// 上传文件目录
-//   keepExtensions: true// 保留后缀
-// }));
+
 
 // 设置模板全局常量
 app.locals.blog = {
@@ -67,6 +64,7 @@ app.locals.blog = {
 app.use('/', routes);
 //app.use('/admin', admin);
 admin(app);
+app.use(upload);
 
 //catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -89,15 +87,6 @@ if (app.get('env') === 'development') {
   });
 }
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
 
 
 module.exports = app;

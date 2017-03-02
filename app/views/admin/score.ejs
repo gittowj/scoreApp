@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="../javascripts/easyui/locale/easyui-lang-zh_CN.js"></script>
 	<script type="text/javascript" src="../javascripts/easyui/easyloader.js"></script>
 	<script type="text/javascript" src="../javascripts/easyui/jquery.ocupload-1.1.2.js"></script>
+	<script src="/javascripts/ajaxfileupload.js"></script>
 </head>
 <body>
     <div id="tb" class="dg_toolbar">
@@ -21,15 +22,15 @@
         <input type="text" id="qscore_name"/>
         <a href="javascript:void(0);" onclick="scoreInfo.query()" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
         <label>|</label>
-        <a href="javascript:void(0);" onclick="scoreInfo.add()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
         <a href="javascript:void(0);" onclick="scoreInfo.del()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
-        <a href="javascript:void(0);" onclick="scoreInfo.mod()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+        <input type="button" id="btnUploadFile" value="导入" />
+		<input type="hidden" id="hidFileName" /> 
     </div>
-    <table id="dg" title="学生管理" class="easyui-datagrid" style="width:500px;" singleSelect="true" idField="_id" rownumbers="true" pagination="true"
+    <table id="dg" title="学分列表" class="easyui-datagrid" style="width:500px;" singleSelect="true" idField="_id" rownumbers="true" pagination="true"
 	   url="/admin/getScoreList" fit="true" toolbar="#tb">
 		<thead>
 			<tr>
-				<th field="id" rowspan="2" width="id" hide="true">ID</th>
+				<th field="id" rowspan="2" width="id">ID</th>
 				<th field="school" rowspan="2" width="80px">学校</th>
 				<th field="class" rowspan="2" width="80px">班级</th>
 				<th field="no" rowspan="2" width="80px">考号</th>
@@ -128,5 +129,45 @@
 	        }
 	        else $.messager.alert('提示', '请选择需要删除的数据.');
 	    }
+		
 	};
+
+	function g_AjxUploadFile(btn, hidPut) { 
+		var button = btn, interval; 
+		new AjaxUpload(button, { 
+			action: "/admin/uploadScore", 
+			data: {}, 
+			name: 'file', 
+			responseType: "json",
+			onSubmit: function(file, ext) { 
+
+			}, 
+			onComplete: function(file, response) { 
+				flagValue = response; 
+				if (flagValue == "1") { 
+					alert("您上传的文档格式不对，请重新选择！"); 
+				} 
+				else if (flagValue == "2") { 
+					alert("您上传的文档大于2M，请重新选择！"); 
+				} 
+				else if (flagValue == "3") { 
+					alert("文档上传失败！"); 
+				} 
+				else { 
+					hidPut.value = response; 
+					alert(response.rtnInfo);
+				} 
+			} 
+		}); 
+	} 
+
+	 $(document).ready(function () {
+
+        var btnFile = document.getElementById("btnUploadFile"); 
+        var hidFileName = document.getElementById("hidFileName"); 
+        g_AjxUploadFile(btnFile, hidFileName); 
+        
+ 
+    });
+
 </script>
