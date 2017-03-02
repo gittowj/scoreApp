@@ -18,7 +18,7 @@ router.post('/searchScore', function(req, res, next){
  if(req.query.no == null || req.query.name == '' || req.query.name == null || req.query.name == '' ){
         var result  = new Object();
         result.code = 0;
-        result.message = "请输入考号和姓名";
+        result.message = "请输入学号和姓名";
         res.render('score', { "result": result });
  }else{
         var query = new Object();

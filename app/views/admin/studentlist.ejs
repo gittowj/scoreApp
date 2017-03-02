@@ -1,0 +1,37 @@
+<div>
+ <table id="mytable" cellspacing="0">
+    <tr>
+        <th scope="col" width="80px">学校</th>
+        <th scope="col" width="80px">学号</th>
+        <th scope="col"  width="80px">姓名</th>
+        <th scope="col" width="60px"></th>
+    </tr>
+    <% 
+        var $i = 1;
+        students.forEach(	function(student){
+            if($i % 2 == 0){%>
+                <tr>  
+                <td class="alt"><%= student.school  %></td>
+                <td class="alt"><%=  student.no   %></td>
+                <td class="alt" ><%=  student.name   %></td>
+                <td> <a href="javascript:void(0);" onclick="removeRow(this, <%= student.id%>);return false;">删除</a> </td>
+
+                </tr>
+            <%}else{
+            %>
+    <tr>  
+            <td><%= student.school  %></td>
+            <td><%=  student.no   %></td>
+            <td><%=  student.name   %></td>
+            <td> <a href="javascript:void(0);" onclick="removeRow(this, <%= student.id%>);return false;">删除</a> </td>
+
+            </tr>  
+            <% 
+                   
+                }
+                 $i++;
+            });%>
+        </table>
+
+
+    </div>

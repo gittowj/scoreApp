@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生列表</title>
+    <script src="/javascripts/jquery-3.1.1.min.js"></script>
+    <script src="/javascripts/ajaxfileupload.js"></script>
+     <script src="/javascripts/laypage/laypage.js"></script>
+    <style type="text/css"> 
+        
+body {  
+ font: normal 11px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;  
+ color: #4f6b72;  
+ background: #E6EAE9;  
+}  
+  
+#mytable {  
+ padding: 0;  
+ margin: 0; 
+}  
+ 
+th {  
+ font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;  
+ color: #4f6b72;  
+ border-right: 1px solid #C1DAD7;  
+ border-bottom: 1px solid #C1DAD7;  
+ border-top: 1px solid #C1DAD7;  
+ letter-spacing: 2px;  
+ text-transform: uppercase;  
+ text-align: center;  
+ padding: 6px 6px 6px 12px;  
+ background: #CAE8EA url(images/bg_header.jpg) no-repeat; 
+}  
+td.nobg {  
+ border-top: 0;  
+ border-left: 0;  
+ border-right: 1px solid #C1DAD7;  
+ background: none;  
+}  
+td {  
+ border-right: 1px solid #C1DAD7;  
+ border-bottom: 1px solid #C1DAD7;  
+ background: #fff;  
+ font-size:11px;  
+ padding: 6px 6px 6px 12px;  
+ color: #4f6b72;  
+}  
+  
+td.alt {  
+ background: #F5FAFA;  
+ color: #797268;  
+ 
+}  
+
+ 
+</style> 
+</head>
+<body>
+    <div class="uploadFile"> 
+        <label>
+            <span>学 校:</span>
+            <input id="school" type="text" name="school" placeholder="学校" />
+        </label>
+        <label>
+            <span>考 号:</span>
+            <input id="no" type="text" name="no" placeholder="学号" />
+        </label>
+        <label>
+            <span>姓 名:</span>
+            <input id="name" type="text" name="name" placeholder="姓 名" />
+        </label>
+        <input type="hidden" id="hidFileName" /> 
+        <input type="button" id="Refresh" value="刷新" />
+    </div> 
+    
+    <br>
+    <div id="studentList"></div>
+    <div id="studentPage"></div>
+</body>
+<script> 
+
+   $(document).ready(function () {
+       param = '{"page":1, "rows": 20}';
+        $('#Refresh').click(function(){
+
+            var formdata = {  
+                    "actId" : 1,  
+                    "proId" : 1,  
+                    "channel_price" : 1,  
+                    "sale_num" : 1,  
+                    "restrict_num" : 1  
+                };  
+
+             var jsonstr = JSON.stringify(formdata);
+            $.ajax({  
+                type: "POST",  
+                url: "/admin/getScoreList",  
+                contentType: "application/json; charset=utf-8",  
+                data: jsonstr,  
+                dataType: "json",  
+                success: function (message) {  
+                    //alert("回执信息为：" + message);  
+                    //alert("哈哈：" + message.Success);  
+  
+                   if (true == message.Success) {  
+                        alert("保存成功");  
+                    } else {  
+                        alert("保存失败");  
+                    }  
+                },  
+                error: function (message) {  
+                    $("#request-process-patent").html("提交数据失败！");  
+                }  
+            });  
+            return;
+        });
+
+        var btnFile = document.getElementById("btnUploadFile"); 
+        var hidFileName = document.getElementById("hidFileName"); 
+        g_AjxUploadFile(btnFile, hidFileName); 
+        
+ 
+    });
+
+</script>
+</html>

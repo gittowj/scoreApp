@@ -52,7 +52,7 @@
     <% 
         var $i = 1;
         scores.forEach(	function(score){
-            var $class = score.grade + "(" + score.classId + ")班";
+            var $class = score.classId;
             if($i % 2 == 0){%>
                 <tr>  
                 <td class="alt"><%= score.school  %></td>

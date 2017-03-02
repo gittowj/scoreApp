@@ -1,75 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>考试查分系统</title>
-    <script src="/javascripts/jquery-3.1.1.min.js"></script>
-    <script src="/javascripts/jquery.form.min.js"></script>
+    <title>在线查分系统</title>
+    <link rel="stylesheet" type="text/css" href="../javascripts/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../javascripts/easyui/themes/icon.css">
+    <script type="text/javascript" src="../javascripts/js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="../javascripts/easyui/jquery.easyui.all.js?version=201702281710"></script>
+	<script type="text/javascript" src="../javascripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../javascripts/easyui/easyloader.js"></script>
+	<script type="text/javascript" src="../javascripts/easyui/jquery.ocupload-1.1.2.js"></script>
 </head>
-
 <body>
-    <div>
-        <form action="/uploadStudent" enctype="multipart/form-data" method="post">
-            <input type="text" name="title"><br>
-            <input type="file" name="file1"><br>
-            <input type="submit" value="Upload">
-        </form>
-        <form id="myForm" action="uploadStudent" enctype="multipart/form-data" method="post">
-            文件: <input type="file" name="file">
-            <button>导入学生</button>
-        </form>
+    <div id="tb" class="dg_toolbar">
+        <span>学校:</span>
+        <input type="text" id="qstudent_school"/>
+        <span>学号:</span>
+        <input type="text" id="qstudent_no"/>
+        <span>姓名:</span>
+        <input type="text" id="qstudent_name"/>
+        <a href="javascript:void(0);" onclick="studentInfo.query()" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
+        <label>|</label>
+        <a href="javascript:void(0);" onclick="studentInfo.del()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
-    <div>
-        学生列表
-        <table>
-            <tr>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-            </tr>
-            <tr>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-            </tr>
-            <tr>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-            </tr>
-            <tr>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-                <td>学号</td>
-            </tr>
-        </table>
-    </div>
+    <table id="dg" title="学生管理" class="easyui-datagrid" style="width:500px;" singleSelect="true" idField="_id" rownumbers="true" pagination="true"
+	   url="/admin/getStudentList" fit="true" toolbar="#tb">
+		<thead>
+			<tr>
+				<th field="id" width="id" hide="true">ID</th>
+				<th field="school" width="80px">学校</th>
+				<th field="class" width="80px">班级</th>
+				<th field="no" width="80px">考号</th>
+				<th field="name" width="80px">姓名</th>
+			</tr>
+		</thead>
+	</table>
+	<div class="easyui-dialog" id="dlg" style="width:480px;height:330px;padding:10px 10px;" closed="true" buttons="#dlg-buttons" data-options="" >
 </body>
-
-<script> 
-    // wait for the DOM to be loaded 
-   $(document).ready(function () {
-        // bind 'myForm' and provide a simple callback function 
-        $('#myForm').ajaxForm(function () {
-            alert("Thank you for your comment!");
-        });
-    });
-</script> 
 </html>
+
+<script type="text/javascript">
+	var studentInfo = {
+		query : function() {
+			$('#dg').datagrid({
+				queryParams: {
+					'student_school': $('#qstudent_school').val(),
+					'student_no': $('#qstudent_no').val(),
+					'student_name': $('#qstudent_name').val(),
+				},
+				pageNumber: 1
+			});
+		},
+		del : function() {
+	    	var curRow = $('#dg').datagrid('getSelected');
+	        if (curRow) {
+	            $.messager.confirm('提示', '是否确认删除该行记录?', function (r) {
+	                if (r) {
+	                    $.ajax({
+	                        url: '/admin/deleteStudent',
+	                        type: 'post',
+	                        data: { 'student_id': curRow.id },
+	                        dataType: 'json',
+	                        success : function(data) {
+								$('#dg').datagrid("reload");
+                                $('#dg').datagrid('unselectAll');
+                                $.messager.show({ title: '提示', msg: data.rtnCode == 1 ? '删除成功！':'删除失败！' });
+							}
+	                    });
+	                }
+	            })
+	        }
+	        else $.messager.alert('提示', '请选择需要删除的数据.');
+	    }
+	};
+</script>

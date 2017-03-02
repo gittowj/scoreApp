@@ -3,230 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <title>在线查分系统</title>
-    <script src="/javascripts/jquery-3.1.1.min.js"></script>
-    <script src="/javascripts/ajaxfileupload.js"></script>
-     <script src="/javascripts/laypage/laypage.js"></script>
-    <style type="text/css"> 
-        
-body {  
- font: normal 11px auto "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;  
- color: #4f6b72;  
- background: #E6EAE9;  
-}  
-  
-#mytable {  
- padding: 0;  
- margin: 0; 
-}  
- 
-th {  
- font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;  
- color: #4f6b72;  
- border-right: 1px solid #C1DAD7;  
- border-bottom: 1px solid #C1DAD7;  
- border-top: 1px solid #C1DAD7;  
- letter-spacing: 2px;  
- text-transform: uppercase;  
- text-align: center;  
- padding: 6px 6px 6px 12px;  
- background: #CAE8EA url(images/bg_header.jpg) no-repeat; 
-}  
-td.nobg {  
- border-top: 0;  
- border-left: 0;  
- border-right: 1px solid #C1DAD7;  
- background: none;  
-}  
-td {  
- border-right: 1px solid #C1DAD7;  
- border-bottom: 1px solid #C1DAD7;  
- background: #fff;  
- font-size:11px;  
- padding: 6px 6px 6px 12px;  
- color: #4f6b72;  
-}  
-  
-td.alt {  
- background: #F5FAFA;  
- color: #797268;  
- 
-}  
-
-
-td.score_value {
-    width: 40px;
-    text-align: right;
-} 
- 
-</style> 
+    <link rel="stylesheet" type="text/css" href="../javascripts/easyui/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../javascripts/easyui/themes/icon.css">
+    <script type="text/javascript" src="../javascripts/js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="../javascripts/easyui/jquery.easyui.all.js?version=201702281710"></script>
+	<script type="text/javascript" src="../javascripts/easyui/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../javascripts/easyui/easyloader.js"></script>
+	<script type="text/javascript" src="../javascripts/easyui/jquery.ocupload-1.1.2.js"></script>
 </head>
 <body>
-    <div class="uploadFile"> 
-        <label>
-            <span>学 校:</span>
-            <input id="school" type="text" name="school" placeholder="学校" />
-        </label>
-        <label>
-            <span>考 号:</span>
-            <input id="no" type="text" name="no" placeholder="考号" />
-        </label>
-        <label>
-            <span>姓 名:</span>
-            <input id="name" type="text" name="name" placeholder="姓 名" />
-        </label>
-        <input type="hidden" id="hidFileName" /> 
-        <input type="button" id="RefreshScore" value="刷新" />
-        <input type="button" id="btnUploadFile" value="导入成绩" /> 
-    </div> 
-    
-    <br>
-    <div id="scoreList"></div>
-    <div id="scorePage"></div>
+    <div id="tb" class="dg_toolbar">
+        <span>学校:</span>
+        <input type="text" id="qscore_school"/>
+        <span>学号:</span>
+        <input type="text" id="qscore_no"/>
+        <span>姓名:</span>
+        <input type="text" id="qscore_name"/>
+        <a href="javascript:void(0);" onclick="scoreInfo.query()" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
+        <label>|</label>
+        <a href="javascript:void(0);" onclick="scoreInfo.add()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
+        <a href="javascript:void(0);" onclick="scoreInfo.del()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+        <a href="javascript:void(0);" onclick="scoreInfo.mod()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+    </div>
+    <table id="dg" title="学生管理" class="easyui-datagrid" style="width:500px;" singleSelect="true" idField="_id" rownumbers="true" pagination="true"
+	   url="/admin/getScoreList" fit="true" toolbar="#tb">
+		<thead>
+			<tr>
+				<th field="id" rowspan="2" width="id" hide="true">ID</th>
+				<th field="school" rowspan="2" width="80px">学校</th>
+				<th field="class" rowspan="2" width="80px">班级</th>
+				<th field="no" rowspan="2" width="80px">考号</th>
+				<th field="name" rowspan="2" width="80px">姓名</th>
+
+				<th colspan="3">总分</th>
+				<th colspan="3">语文</th>
+				<th colspan="3">数学</th>
+				<th colspan="3">英语</th>
+				<th colspan="3">地理</th>
+				<th colspan="3">历史</th>
+				<th colspan="3">政治</th>
+				<th colspan="3">物理</th>
+				<th colspan="3">生物</th>
+				<th colspan="3">化学</th>
+			</tr>
+			<tr>
+				<th field="score" width="80px"></th>
+				<th field="gradeOrder" width="80px">班级排名</th>
+				<th field="classOrder" width="80px">年级排名</th>
+
+				<th field="chineseScore" width="80px"></th>
+				<th field="chineseGradeOrder" width="80px">班级排名</th>
+				<th field="chineseClassOrder" width="80px">年级排名</th>
+
+				<th field="mathScore" width="80px"></th>
+				<th field="mathGradeOrder" width="80px">班级排名</th>
+				<th field="mathClassOrder" width="80px">年级排名</th>
+
+				<th field="englishScore" width="80px"></th>
+				<th field="englishGradeOrder" width="80px">班级排名</th>
+				<th field="englishClassOrder" width="80px">年级排名</th>
+				
+				<th field="geographyScore" width="80px"></th>
+				<th field="geographyGradeOrder" width="80px">班级排名</th>
+				<th field="geographyClassOrder" width="80px">年级排名</th>
+
+				<th field="historyScore" width="80px"></th>				
+				<th field="historyClassOrder" width="80px">班级排名</th>
+				<th field="historyGradeOrder" width="80px">年级排名</th>
+
+				<th field="politicsScore" width="80px"></th>
+				<th field="politicsClassOrder" width="80px">班级排名</th>
+				<th field="politicsGradeOrder" width="80px">年级排名</th>
+
+				<th field="physicsScore" width="80px"></th>
+				<th field="physicsClassOrder" width="80px">班级排名</th>
+				<th field="physicsGradeOrder" width="80px">年级排名</th>
+
+
+				<th field="biologyScore" width="80px"></th>
+				<th field="biologyClassOrder" width="80px">班级排名</th>
+				<th field="biologyGradeOrder" width="80px">年级排名</th>
+
+				<th field="chemistryScorer" width="80px"></th>
+				<th field="chemistryGradeOrde" width="80px">年级排名</th>
+				<th field="chemistryClassOrder" width="80px">班级排名</th>
+				
+			</tr>
+		</thead>
+	</table>
+	<div class="easyui-dialog" id="dlg" style="width:480px;height:330px;padding:10px 10px;" closed="true" buttons="#dlg-buttons" data-options="" >
 </body>
-<script> 
-
-// wait for the DOM to be loaded 
-   var $pageCount = 0;
-   var $pageIndex = 1;
-   var $nums = 20; //每页出现的数量
-   var $scoreRefreshWhere = "";
-   $(document).ready(function () {
-        $('#RefreshScore').click(function(){
-            $scoreRefreshWhere = getSearchWhere();
-            $.ajax({
-                    url: '/admin/getScore?scoreCount' + $scoreRefreshWhere,
-                    type: 'POST',
-                    data: null,
-                    // async: false,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function(data){
-                        $pageCount = data.pageCount;
-                        initPage();
-                    },
-                    error: function(){
-                          $('#scoreList').html("与服务器通信发生错误");
-                    }
-            });
-            return false;
-        });
-
-        var btnFile = document.getElementById("btnUploadFile"); 
-        var hidFileName = document.getElementById("hidFileName"); 
-        g_AjxUploadFile(btnFile, hidFileName); 
-        
- 
-    });
-
-//文档上传 
-function g_AjxUploadFile(btn, hidPut, action) { 
-    var button = btn, interval; 
-    new AjaxUpload(button, { 
-        action: "uploadScore", 
-        data: {}, 
-        name: 'file', 
-        responseType: "json",
-        onSubmit: function(file, ext) { 
-            if (!(ext && /^(rar|zip|pdf|pdfx|txt|csv|xls|xlsx|doc|docx|RAR|ZIP|PDF|PDFX|TXT|CSV|XLS|XLSX|DOC|DOCX)$/.test(ext))) { 
-                alert("您上传的文档格式不对，请重新选择！"); 
-                return false; 
-            } 
-        }, 
-        onComplete: function(file, response) { 
-            flagValue = response; 
-            if (flagValue == "1") { 
-                alert("您上传的文档格式不对，请重新选择！"); 
-            } 
-            else if (flagValue == "2") { 
-                alert("您上传的文档大于2M，请重新选择！"); 
-            } 
-            else if (flagValue == "3") { 
-                alert("文档上传失败！"); 
-            } 
-            else { 
-                hidPut.value = response; 
-                alert(response.rtnInfo);
-            } 
-        } 
-    }); 
-} 
-
-function getSearchWhere(){
-    var $where = "";
-    var $obj = $("#school").val();
-    if($("#school").val()){
-        $where += "&school=" + $("#school").val();
-    }
-
-    if($("#no").val()){
-        $where += "&no=" + $("#no").val();
-    }
-
-    if($("#name").val()){
-        $where += "&name=" + $("#name").val();
-    }
-
-    return $where;
-}
-
-
-    function getPage($pageSize){
-        $.ajax({
-            url: '/admin/getScoreList?pageCount=' + $nums + "&page=" + $pageSize + $scoreRefreshWhere,
-            type: 'POST',
-            data: null,
-            async: true,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function(data){
-                    $('#scoreList').html(data);
-            },
-            error: function(){
-                    $('#scoreList').html("与服务器通信发生错误");
-            }
-        });
-    }
-
-function initPage(){
-    //调用分页
-    laypage({
-        cont: 'scorePage',
-        pages: Math.ceil($pageCount/$nums),
-        jump: function(obj){
-            $pageIndex = obj.curr;
-            getPage(obj.curr);
-            
-        }
-    })
-}
-
-function removeRow(Obj, id){        
-    $.ajax({
-        url: '/admin/deleteScore?id=' + id,
-        type: 'POST',
-        data: null,
-        // async: false,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function(data){
-            if(data.rtnCode == 0){
-                alert(data.rtnInfo);
-            }else{
-                //var tr=Obj.parentNode.parentNode; 
-                //var tbody=tr.parentNode; 
-                //tbody.removeChild(tr); 
-                getPage($pageIndex);
-            }
-        },
-        error: function(){
-            alert("删除失败");
-        }
-    });
-    return false;
-}
-
-</script>
 </html>
+
+<script type="text/javascript">
+	var scoreInfo = {
+		query : function() {
+			$('#dg').datagrid({
+				queryParams: {
+					'score_school': $('#qscore_school').val(),
+					'score_no': $('#qscore_no').val(),
+					'score_name': $('#qscore_name').val(),
+				},
+				pageNumber: 1
+			});
+		},
+		del : function() {
+	    	var curRow = $('#dg').datagrid('getSelected');
+	        if (curRow) {
+	            $.messager.confirm('提示', '是否确认删除该行记录?', function (r) {
+	                if (r) {
+	                    $.ajax({
+	                        url: '/admin/deleteScore',
+	                        type: 'post',
+	                        data: { 'score_id': curRow.id },
+	                        dataType: 'json',
+	                        success : function(data) {
+								$('#dg').datagrid("reload");
+                                $('#dg').datagrid('unselectAll');
+                                $.messager.show({ title: '提示', msg: data.rtnCode == 1 ? '删除成功！':'删除失败！' });
+							}
+	                    });
+	                }
+	            })
+	        }
+	        else $.messager.alert('提示', '请选择需要删除的数据.');
+	    }
+	};
+</script>

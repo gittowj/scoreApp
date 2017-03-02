@@ -23,10 +23,23 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(bodyParser.urlencoded({ limit:'10mb',extended:true}));
+app.use(bodyParser.json({limit:'10mb'}));
+
+// app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser.json({
+    verify: function (req, res, buf, encoding) {
+        req.rawBody = buf;
+    }
+}));
+app.use(bodyParser.urlencoded({
+    extended: false,
+    verify: function (req, res, buf, encoding) {
+        req.rawBody = buf;
+    }
+}));
 
 // session 中间件
 app.use(session({
@@ -39,11 +52,11 @@ app.use(session({
   }
 }));
 
-// 处理表单及文件上传的中间件
-app.use(require('express-formidable')({
-  // uploadDir: path.join(__dirname, 'public/img'),// 上传文件目录
-  keepExtensions: true// 保留后缀
-}));
+// // 处理表单及文件上传的中间件
+// app.use(require('express-formidable')({
+//   // uploadDir: path.join(__dirname, 'public/img'),// 上传文件目录
+//   keepExtensions: true// 保留后缀
+// }));
 
 // 设置模板全局常量
 app.locals.blog = {
@@ -52,12 +65,10 @@ app.locals.blog = {
 };
 
 app.use('/', routes);
-app.use('/users', users);
-app.use('/admin', admin);
-app.use('/signin', signin);
-//app.use('/admin/score', score);
+//app.use('/admin', admin);
+admin(app);
 
-// catch 404 and forward to error handler
+//catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
