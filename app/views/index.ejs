@@ -1,49 +1,58 @@
-<!DOCTYPE html>
-<html class="panel-fit">
+<!doctype html>
+<html>
 <head>
     <meta charset="UTF-8">  
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TextBox - jQuery EasyUI Mobile Demo</title>  
     <link rel="stylesheet" type="text/css" href="/javascripts/jquery-easyui-1.5.1/themes/metro/easyui.css">  
     <link rel="stylesheet" type="text/css" href="/javascripts/jquery-easyui-1.5.1/themes/mobile.css">  
+	<link rel="stylesheet" type="text/css" href="/javascripts/jquery-easyui-1.5.1/themes/color.css"> 
     <link rel="stylesheet" type="text/css" href="/javascripts/jquery-easyui-1.5.1/themes/icon.css">  
     <script type="text/javascript" src="/javascripts/jquery-easyui-1.5.1/jquery.min.js"></script>  
     <script type="text/javascript" src="/javascripts/jquery-easyui-1.5.1/jquery.easyui.min.js"></script> 
-    <script type="text/javascript" src="/javascripts/jquery-easyui-1.5.1/jquery.easyui.mobile.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery-easyui-1.5.1/jquery.easyui.mobile.js"></script> 
+
+	<style>
+		.m-list li {
+			border-width: 0 0 0 0;
+		}
+	</style>
 </head>
-<body class="panel-noscroll">
-	<div class="panel navpanel easyui-fluid" style="display: block; width: 371px;"><header class="panel-header panel-header-noborder" style="width: 361px;">
+<body>
+	<div class="easyui-navpanel">
+		<header>
 			<div class="m-toolbar">
 				<div class="m-title">在线查询</div>
 			</div>
-		</header><div class="easyui-navpanel panel-body panel-body-noborder" title="" style="width: 371px; height: 884px;">
-		
+		</header>
+		<header>
 		<ul class="m-list">
-			<li>
-				<label class="textbox-label textbox-label-top" for="_easyui_textbox_input1" style="text-align: left; width: 351px;">Standard TextBox:</label><input class="easyui-textbox textbox-f" style="width: 100%; display: none;" data-options="
-						label: 'Standard TextBox:',
-						labelPosition: 'top',
-						prompt: 'Search...'
-						"><span class="textbox easyui-fluid" style="width: 349px;"><input id="_easyui_textbox_input1" type="text" class="textbox-text validatebox-text textbox-prompt" autocomplete="off" tabindex="" placeholder="Search..." style="width: 341px; margin: 0px; padding-top: 0px; padding-bottom: 0px; height: 30px; line-height: 30px;"><input type="hidden" class="textbox-value" value=""></span>
-			</li>
-			<li>
-				<label class="textbox-label textbox-label-top" for="_easyui_textbox_input2" style="text-align: left; width: 351px;">Icon:</label><input class="easyui-textbox textbox-f" style="width: 100%; display: none;" data-options="
-						label: 'Icon:',
-						labelPosition: 'top',
-						iconCls: 'icon-search'
-						"><span class="textbox easyui-fluid" style="width: 349px;"><span class="textbox-addon textbox-addon-right" style="right: 0px; top: 0px;"><a href="javascript:;" class="textbox-icon icon-search textbox-icon-disabled" icon-index="0" tabindex="-1" style="width: 28px; height: 30px;"></a></span><input id="_easyui_textbox_input2" type="text" class="textbox-text validatebox-text textbox-prompt" autocomplete="off" tabindex="" placeholder="" style="width: 313px; margin: 0px 28px 0px 0px; padding-top: 0px; padding-bottom: 0px; height: 30px; line-height: 30px;"><input type="hidden" class="textbox-value" value=""></span>
-			</li>
-			<li>
-				<label class="textbox-label textbox-label-top" for="_easyui_textbox_input3" style="text-align: left; width: 351px;">Button:</label><input class="easyui-textbox textbox-f" style="width: 100%; display: none;" data-options="
-						label: 'Button:',
-						labelPosition: 'top',
-						buttonText: 'Search'
-						"><span class="textbox easyui-fluid" style="width: 349px;"><a href="javascript:;" class="textbox-button textbox-button-right l-btn l-btn-small" group="" id="" style="height: 30px;"><span class="l-btn-left" style="margin-top: 3px;"><span class="l-btn-text">Search</span></span></a><input id="_easyui_textbox_input3" type="text" class="textbox-text validatebox-text textbox-prompt" autocomplete="off" tabindex="" placeholder="" style="width: 294px; margin: 0px 47px 0px 0px; padding-top: 0px; padding-bottom: 0px; height: 30px; line-height: 30px;"><input type="hidden" class="textbox-value" value=""></span>
-			</li>
+			<li><span>学校</span><br><input class="easyui-textbox" prompt="学校" style="width:100%" id= "qscore_school"></li>
+			<li><span>学号</span><br><input class="easyui-textbox" prompt="学号" style="width:100%" id= "qscore_no"></li>
+			<li><span>姓名</span><br><input class="easyui-textbox" prompt="姓名" style="width:100%" id = "qscore_name"></li>
 		</ul>
-
-	</div></div>
-	
-
-</body>
+		</header>
+	<div style="padding:0px 10px 10px 10px">
+		<p><a href="javascript:void(0);" onclick="scoreInfo.query()" class="easyui-linkbutton c6" style="width:100%">Button6</a></p>
+		</div>
+	</div>
+	<div style="padding:0px 10px 10px 10px">
+		<span id="smessage">
+	</div>
+</body>	
 </html>
+<script>
+	var scoreInfo = {
+		query = function() {
+			 $.ajax({
+					url: '/admin/deleteScore',
+					type: 'post',
+					data: { 'score_school': $('#qscore_school').val(), 'score_no' : $('#qscore_no').val(), 'score_name' :  $('#qscore_name').val() },
+					dataType: 'json',
+					success : function(data) {
+						$('#smessage').html(data);
+					}
+				});
+		}
+	};
+</script>
