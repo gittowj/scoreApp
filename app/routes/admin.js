@@ -44,6 +44,9 @@ function getByPage(req, callback){
 }
 
 module.exports = function(router){
+  router.get('/jj', function (req, res, next) {
+  res.render('jj', { result: null });
+});
   /* GET users listing. */
 router.get('/admin', function (req, res, next) {
   res.render('admin/index', { title: 'hello world' });

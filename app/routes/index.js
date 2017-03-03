@@ -14,6 +14,8 @@ router.get('/', function (req, res, next) {
   res.render('index', { result: null });
 });
 
+
+
 router.post('/searchScore', function(req, res, next){
  if(req.query.no == null || req.query.name == '' || req.query.name == null || req.query.name == '' ){
         var result  = new Object();
