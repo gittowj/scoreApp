@@ -1,22 +1,7 @@
 var mysql = require('mysql');
 var $conf = require('../conf/db');
 var $util = require('../util/util');
-var async = require('async');
-var studentDao = require('./studentDao');
 var gradeDao = require('./gradeDao');
-
-var $sql = {
-	insert: "INSERT INTO grade(studentId, grade, score, classOrder, gradeOrder, chineseScore, chineseClassOrder, chineseGradeOrder, \
-    mathScore, mathClassOrder,mathGradeOrder, englishScore, englishClassOrder, englishGradeOrder, physicsScore, physicsClassOrder, physicsGradeOrder, \
-    chemistryScore, chemistryClassOrder,chemistryGradeOrder, biologyScore, biologyClassOrder, biologyGradeOrder, politicsScore, politicsClassOrder, \
-    politicsGradeOrder, historyScore, historyClassOrder,historyGradeOrder, geographyScore, geographyClassOrder, geographyGradeOrder) \
-    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-	delete: 'delete from grade', 
-	deleteById: delete + ' where id=?',
-	queryById: 'select * from score where id=?',
-    queryByStudent: 'select * from score where name = ? and no = ?',
-	queryAll: 'select * from score'
-};
 
 var mqQueries = require('mysql-queries').init($conf.mysql);
 
@@ -78,39 +63,14 @@ module.exports = {
 		});
 
 	},
-	queryBySchool: function (req, next) {
-		// pool.getConnection(function (err, connection) {
-		// 	// 获取前台页面传过来的参数
-		// 	var param = req.params;
-
-        //     connection.query($sql.query, [param.school], function (err,rows,fields) {
-		// 		if (err) {
-		// 			next(null);
-		// 		}else{
-		// 			next(rows);
-		// 		}
-
-		// 		// 释放连接 
-		// 		connection.release();
-		// 	});
-		// });
-	},
-	queryByStudent: function (req, next) {
-		// pool.getConnection(function (err, connection) {
-		// 	// 获取前台页面传过来的参数
-		// 	var param = req.params;
-
-        //     connection.query($sql.queryByStudent, [param.name, param.no], function (err,rows,fields) {
-		// 		if (err) {
-		// 			next(null);
-		// 		}else{
-		// 			next(rows);
-		// 		}
-
-		// 		// 释放连接 
-		// 		connection.release();
-		// 	});
-		// });
+	queryByStudent: function (score, next) {
+		mqQueries.queries(["select * from score where school = ? and no = ? and name = ? order by id desc limit 1;"], [[score.school, score.no, score.name]], function(err, results){
+			if(results.length > 0){
+				next(results[0]);
+			}else{
+				next(null);
+			}
+		});
 	},
 	queryAll: function(req, next){
 		mqQueries.query($sql.queryAll,function(err,rows){

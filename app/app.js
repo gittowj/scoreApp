@@ -8,11 +8,8 @@ var session = require('express-session');
 
 var config = require('./conf/config');
 var routes = require('./routes/index'); 
-var users = require('./routes/users');
 var admin = require('./routes/admin');
 var upload = require('./routes/upload');
-//var score = require('./routes/score');
-var signin = require('./routes/signin');
 
 
 var app = express();
@@ -33,7 +30,7 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ limit:'10mb',extended:true}));
 app.use(bodyParser.json({limit:'10mb'}));
 
-// app.use(cookieParser());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json({
@@ -67,8 +64,9 @@ app.locals.blog = {
   description: "小系统"
 };
 
-app.use('/', routes);
-//app.use('/admin', admin);
+// app.use('/', routes);
+// //app.use('/admin', admin);
+routes(app);
 admin(app);
 app.use(upload);
 
@@ -78,6 +76,7 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
 
 // error handlers
 
@@ -92,7 +91,5 @@ if (app.get('env') === 'development') {
     });
   });
 }
-
-
 
 module.exports = app;

@@ -100,43 +100,24 @@ module.exports = {
 
 
 			async.concatSeries(indexArray, function(indexObject,batchcallback) {
-				var sqls = new Array;
-				var sqlParams = new Array;
-				for(var i = indexObject.startIndex; i < datas.length & i <= indexObject.endIndex; i++){
-					var data = datas[i];
-					sqls.push("update student set school = ?, no = ?, name=? where id=? ");
-					sqlParams.push([data.school, data.no, data.name, data.id]);
-				}
-				mqQueries.queries(sqls, sqlParams, function(err, results){
-					// if(!!err) {
-					// 	console.log(err);
-					// } 
-					// else {
-					// 	//If not error, the "results" is the results of the SQLs as array.
-					// 	console.log(results);
-					// }
-					batchcallback(null, err);
-				});
-				// pool.getConnection(function (err, connection) {
-				// 	var sql = "";
-				// 	var i;
-				// 	var optionedCount = 0;
+					var sqls = new Array;
+					var sqlParams = new Array;
+					for(var i = indexObject.startIndex; i < datas.length & i <= indexObject.endIndex; i++){
+						var data = datas[i];
+						sqls.push("update student set school = ?, no = ?, name=? where id=? ");
+						sqlParams.push([data.school, data.no, data.name, data.id]);
+					}
+					mqQueries.queries(sqls, sqlParams, function(err, results){
+						// if(!!err) {
+						// 	console.log(err);
+						// } 
+						// else {
+						// 	//If not error, the "results" is the results of the SQLs as array.
+						// 	console.log(results);
+						// }
+						batchcallback(null, err);
+					});
 
-
-				// 	for(var i = indexObject.startIndex; i < datas.length & i <= indexObject.endIndex; i++){
-				// 		var data = datas[i];
-				// 		sql += " \ update student set school = '" + data.school + "', no = '" + data.no + "', name='" + data.name + "' where id=" + data.id + "; " ;
-				// 	}
-
-				// 	console.log(sql);
-
-
-				// 	connection.query(sql,function (err, result) {
-				// 		batchcallback(null, err);
-				// 		// 释放连接 
-				// 		connection.release();
-				// 	});
-				// });
 				}, function(err, values) {
 					if(callback){
 						callback(null, err);

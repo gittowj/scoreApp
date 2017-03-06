@@ -1,4 +1,3 @@
-var mysql = require('mysql');
 var $conf = require('../conf/db');
 var $util = require('../util/util');
 var async = require('async');
@@ -11,8 +10,6 @@ var $sql = {
 	queryAll: 'select * from grade'
 };
 
-// 使用连接池，提升性能
-var pool = mysql.createPool($util.extend({}, $conf.mysql));
 
 var mqQueries = require('mysql-queries').init($conf.mysql);
 
@@ -43,33 +40,6 @@ module.exports = {
 
 
 		var insert = function(datas, callback){
-			// pool.getConnection(function (err, connection) {
-			// 	var sql = "INSERT INTO grade(studentId, class, score, classOrder, gradeOrder, chineseScore, chineseClassOrder, chineseGradeOrder, \
-			// 			mathScore, mathClassOrder,mathGradeOrder, englishScore, englishClassOrder, englishGradeOrder, physicsScore, physicsClassOrder, physicsGradeOrder, \
-			// 			chemistryScore, chemistryClassOrder,chemistryGradeOrder, biologyScore, biologyClassOrder, biologyGradeOrder, politicsScore, politicsClassOrder, \
-			// 			politicsGradeOrder, historyScore, historyClassOrder,historyGradeOrder, geographyScore, geographyClassOrder, geographyGradeOrder) \
-			// 			VALUES";
-			// 	for(var i = 0; i < datas.length; i++){
-            //         var score = datas[i];
-            //         sql += "("+score.studentId+", '"+score.class+"', "+score.score+","+score.classOrder+","+score.gradeOrder+","+score.chineseScore+","+score.chineseClassOrder+",\
-            //         "+score.chineseGradeOrder+","+score.mathScore+","+score.mathClassOrder+","+score.mathGradeOrder+","+score.englishScore+","+score.englishClassOrder+","+score.englishGradeOrder+","+score.physicsScore+","+score.physicsClassOrder+",\
-            //         "+score.physicsGradeOrder+","+score.chemistryScore+","+score.chemistryClassOrder+","+score.chemistryGradeOrder+","+score.biologyScore+","+score.biologyClassOrder+","+score.biologyGradeOrder+","+score.politicsScore+","+score.politicsClassOrder+",\
-            //         "+score.politicsGradeOrder+","+score.historyScore+","+score.historyClassOrder+","+score.historyGradeOrder+","+score.geographyScore+","+score.geographyClassOrder+","+score.geographyGradeOrder+")";
-            //         if(i == datas.length-1){
-            //             sql+= ";"
-            //         }else{
-            //             sql += ","
-            //         }
-			// 	}
-
-
-			// 	connection.query(sql,function (err, result) {
-			// 		callback(null, err);
-			// 		// 释放连接 
-			// 		connection.release();
-			// 	});
-			// });
-
             var maxUpdateCount = 1000;
 			var optionCount = datas.length / maxUpdateCount + 1;
 
@@ -88,14 +58,14 @@ module.exports = {
 				for(var i = indexObject.startIndex; i < datas.length & i <= indexObject.endIndex; i++){
 					var score = datas[i];
 								
-					sqls.push("INSERT INTO grade(studentId, class, score, classOrder, gradeOrder, chineseScore, chineseClassOrder, chineseGradeOrder, \
+					sqls.push("INSERT INTO grade(studentId, class, title, score, classOrder, gradeOrder, chineseScore, chineseClassOrder, chineseGradeOrder, \
 						mathScore, mathClassOrder,mathGradeOrder, englishScore, englishClassOrder, englishGradeOrder, physicsScore, physicsClassOrder, physicsGradeOrder, \
 						chemistryScore, chemistryClassOrder,chemistryGradeOrder, biologyScore, biologyClassOrder, biologyGradeOrder, politicsScore, politicsClassOrder, \
 						politicsGradeOrder, historyScore, historyClassOrder,historyGradeOrder, geographyScore, geographyClassOrder, geographyGradeOrder) \
-						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, \
+						VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, \
 						?, ?, ?, ?, ?, ?, ?, ?, \
 						?, ?, ?, ?, ?, ?, ?);");
-					sqlParams.push([score.studentId, score.class, score.score, score.classOrder, score.gradeOrder, score.chineseScore, score.chineseClassOrder,
+					sqlParams.push([score.studentId, score.class, score.title, score.score, score.classOrder, score.gradeOrder, score.chineseScore, score.chineseClassOrder,
 							score.chineseGradeOrder, score.mathScore, score.mathClassOrder, score.mathGradeOrder, score.englishScore, score.englishClassOrder, score.englishGradeOrder, score.physicsScore, score.physicsClassOrder,
 							score.physicsGradeOrder, score.chemistryScore, score.chemistryClassOrder, score.chemistryGradeOrder, score.biologyScore, score.biologyClassOrder, score.biologyGradeOrder, score.politicsScore, score.politicsClassOrder,
 							score.politicsGradeOrder, score.historyScore, score.historyClassOrder, score.historyGradeOrder, score.geographyScore, score.geographyClassOrder, score.geographyGradeOrder]);
@@ -194,16 +164,12 @@ module.exports = {
 
 
         var sql = $sql.queryAll + " where studentId in (select id from student where " + sqlWhere + " );"
-		pool.getConnection(function (err, connection) {
-			connection.query(sql,function(err,rows,fields){
-		 		if(err){
-					callback(0, rows);
-				}else{
-					callback(1, rows);
-				}
-				// 释放连接 
-				connection.release();
-		    });
+		mqQueries.query(sql,function(err,rows,fields){
+			if(err){
+				callback(0, rows);
+			}else{
+				callback(1, rows);
+			}
 		});
 	},
 	deleteById: function(id, next){

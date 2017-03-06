@@ -29,7 +29,7 @@ function getByGrade(grades, grade){
   var obj = null;
   for(var i = 0; i < grades.length; i++){
     obj = grades[i];
-    if(obj.studentId == grade.studentId && obj.class == grade.class){
+    if(obj.studentId == grade.studentId && obj.class == grade.class && obj.title == grade.title){
       //grades.splice(i, 1);
       return obj;
     }
@@ -39,13 +39,12 @@ function getByGrade(grades, grade){
 }
 
 module.exports = {
-  importScoreFromFile : function (filePath, school, grade, next){ 
+  importScoreFromFile : function (filePath, school, grade, title, next){ 
     var obj = xlsx.parse(filePath);
     var datas = obj[0].data; 
     var students;
     var grades;
 
-    console.log(datas.length);
     var execOptions = ['getStudent', 'getGrade'];
     async.concatSeries(execOptions, function(option,callback) {
       var req = new Object();
@@ -92,6 +91,7 @@ module.exports = {
           // score.no = data[0];
           // score.name = data[1];
 
+          score.title = title;
           score.class = data[2];
           score.score = data[3];
           score.gradeOrder = data[4];

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">  
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TextBox - jQuery EasyUI Mobile Demo</title>  
+    <title>在线查询</title>  
     <link rel="stylesheet" type="text/css" href="/javascripts/jquery-easyui-1.5.1/themes/metro/easyui.css">  
     <link rel="stylesheet" type="text/css" href="/javascripts/jquery-easyui-1.5.1/themes/mobile.css">  
 	<link rel="stylesheet" type="text/css" href="/javascripts/jquery-easyui-1.5.1/themes/color.css"> 
@@ -32,25 +32,43 @@
 			<li><span>姓名</span><br><input class="easyui-textbox" prompt="姓名" style="width:100%" id = "qscore_name"></li>
 		</ul>
 		</header>
-	<div style="padding:0px 10px 10px 10px">
-		<p><a href="javascript:void(0);" onclick="scoreInfo.query()" class="easyui-linkbutton c6" style="width:100%">Button6</a></p>
+		<div style="padding:0px 10px 10px 10px;">
+			<p><a href="javascript:void(0);" onclick="scoreInfo.query()" class="easyui-linkbutton c6" style="width:100%">查 询</a></p>
+			<div style="color:red;" id="err_message">
+			</div>
 		</div>
+
+		
 	</div>
-	<div style="padding:0px 10px 10px 10px">
-		<span id="smessage">
-	</div>
+	
 </body>	
 </html>
 <script>
 	var scoreInfo = {
-		query = function() {
+		query:function() {
+			var score_school = $('#qscore_school').val();
+			var score_no = $('#qscore_no').val();
+			var score_name = $('#qscore_name').val();
+
+			var params = new Object();
+			params.score_school = score_school;
+			params.score_no = score_no;
+			params.score_name = score_name;
+
 			 $.ajax({
-					url: '/admin/deleteScore',
+					url: '/searchScore',
 					type: 'post',
-					data: { 'score_school': $('#qscore_school').val(), 'score_no' : $('#qscore_no').val(), 'score_name' :  $('#qscore_name').val() },
+					data: params,
 					dataType: 'json',
 					success : function(data) {
-						$('#smessage').html(data);
+							if(data.code == 1){
+								location.href = 'score';
+							}else{
+								$('#err_message').html(data.message);
+							} 
+					},
+					error: function(data){ 
+
 					}
 				});
 		}

@@ -1,50 +1,13 @@
-var express = require('express');
 var path = require('path');
 var xlsx = require('node-xlsx');
 var fs = require('fs');
-var router = express.Router();
 var scoreDao = require('../dao/scoreDao');
 var studentDao = require('../dao/studentDao');
 var upload = require('../util/upload');
-var pagination = require('pagination');
 var score = require('./score');
-var wchatPay = require('../public/wxpay/wchatPay');
-var moment = require("moment");
-
-function getStudentByPage(req, res){
-    getByPage(req, function(changePer_page,per_page){
-      studentDao.getByPage(changePer_page,per_page, req,function (err, students) {
-            if (err) {
-              students = [];
-            };
-            res.render('admin/studentlist', { students:students});
-      });
-    });
-}
-
-function getByPage(req, callback){
-  var per_pages = 1;
-    if(req.query.page){
-      per_pages = req.query.page;
-    };
-    if(req.body.per_page){
-      per_pages = req.body.page;
-    }
-
-    var per_page = 20;
-    if(req.query.pageCount){
-      per_page = req.query.pageCount;
-    };
-    if(req.body.pageCount){
-      per_page = req.body.pageCount;
-    }
-
-    var changePer_page = ( per_pages - 1 ) * per_page;
-    callback(changePer_page,per_page);
-}
 
 module.exports = function(router){
-  router.get('/jj', function (req, res, next) {
+router.get('/jj', function (req, res, next) {
   res.render('jj', { result: null });
 });
   /* GET users listing. */
@@ -55,29 +18,6 @@ router.get('/admin', function (req, res, next) {
 router.get('/admin/score1', function (req, res, next) {
   res.render('admin/score1', { title: 'hello world' });
 });
-
-
-// 导入学生
-router.post('/admin/uploadStudent', function (req, res) {
-  res.send({ "rtnCode": "-1", "rtnInfo": "上传失败" }); 
-  var file = req.files.file;
-  var tmp_path = file.path;
-  var newName = Date.now() + path.extname(file.name);
-  var new_path = path.resolve("../public/upload/" + newName);
-  fs.rename(tmp_path, new_path, function (err) {
-    if (err) {
-      // res.send({ "rtnCode": "-1", "rtnInfo": "上传失败" }); 
-    }
-  });
-  importStudentFromFile(new_path);
-  res.send({ "rtnCode": "0", "rtnInfo": "上传成功" }); 
-});
-
-function importStudentFromFile(filePath){ 
-  var obj = xlsx.parse(filePath);
-  var datas = obj[0].data;
-}
-
 
 router.get('/admin/student', function (req, res, next) {
   res.render('admin/student', { title: '学生管理' });
@@ -232,21 +172,6 @@ router.post('/admin/deleteScore', function (req, res, next) {
     }else{
        res.send({ "rtnCode": "1", "rtnInfo": "删除成功" });
     }
-  });
-});
-
-
-router.post('/admin/getScore', function(req, res, next) {
-  scoreDao.getCount(req, function(count){
-    //req.query.pageCount = count;
-    res.send({"pageCount":count});
-  });
-});
-
-router.post('/admin/getStudent', function(req, res, next) {
-  studentDao.getCount(req, function(count){
-    //req.query.pageCount = count;
-    res.send({"pageCount":count});
   });
 });
 };
