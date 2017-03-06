@@ -3,6 +3,7 @@ var xlsx = require('node-xlsx');
 var fs = require('fs');
 var scoreDao = require('../dao/scoreDao');
 var studentDao = require('../dao/studentDao');
+var userDao = require('../dao/userDao');
 var upload = require('../util/upload');
 var score = require('./score');
 
@@ -173,5 +174,120 @@ router.post('/admin/deleteScore', function (req, res, next) {
        res.send({ "rtnCode": "1", "rtnInfo": "删除成功" });
     }
   });
+});
+
+router.get('/admin/user', function (req, res, next) {
+    res.render('admin/user', { title: '用户管理' });
+});
+
+router.post('/admin/userSave', function(req, res, next){
+  var user = new Object();
+  if(req.query.username){
+      user.username = req.query.username;
+    };
+    if(req.body.username){
+      user.username = req.body.username;
+    }
+
+    if(req.query.passwd){
+      user.passwd = req.query.passwd;
+    };
+    if(req.body.passwd){
+      user.passwd = req.body.passwd;
+    }
+
+    if(req.query.cname){
+      user.cname = req.query.cname;
+    };
+    if(req.body.cname){
+      user.cname = req.body.cname;
+    }
+
+
+    if(req.query.email){
+      user.email = req.query.email;
+    };
+    if(req.body.email){
+      user.email = req.body.email;
+    }
+
+    if(req.query.mobilenum){
+      user.mobilenum = req.query.mobilenum;
+    };
+    if(req.body.mobilenum){
+      user.mobilenum = req.body.mobilenum;
+    }
+
+    if(req.query.id){
+      user.id = req.query.id;
+    };
+    if(req.body.id){
+      user.id = req.body.id;
+    }
+
+    userDao.getUser(user, function(err, row){
+        if(row != null){
+             res.send({ "rtnCode": "0", "rtnInfo": "该用户名已经存在" });
+        }else{
+          if(user.id){
+            userDao.edit(user, function(err){
+              if(err){
+                res.send({ "rtnCode": "0", "rtnInfo": "修改失败" });
+              }else{
+                res.send({ "rtnCode": "1", "rtnInfo": "修改成功" });
+              }
+            });
+          }else{
+
+            userDao.add(user, function(err){
+              if(err){
+                res.send({ "rtnCode": "0", "rtnInfo": "新增失败" });
+              }else{
+                res.send({ "rtnCode": "1", "rtnInfo": "新增成功" });
+              }
+            });
+          }
+        }
+    });
+    
+
+});
+
+router.post('/admin/getUserList', function(req, res, next){
+  var page = 1;
+    if(req.query.page){
+      page = req.query.page;
+    };
+    if(req.body.page){
+      page = req.body.page;
+    }
+
+    var rowcount = 20;
+    if(req.query.rows){
+      rowcount = req.query.rows;
+    };
+    if(req.body.rows){
+      rowcount = req.body.rows;
+    }
+
+    var user = new Object();
+    if(req.query.user_name){
+      user.username = req.query.user_name;
+    };
+    if(req.body.score_name){
+      user.username = req.body.user_name;
+    }
+
+
+    userDao.getUserByPage(user,page, rowcount, 0,function (err, result) {
+          if(err){
+            res.send(err);
+          }else{
+              res.json(result);
+          }
+
+         res.end();
+         // res.render('admin/scorelist', { scores:scores});
+    });
 });
 };

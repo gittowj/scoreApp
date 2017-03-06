@@ -47,7 +47,7 @@ module.exports = {
 
 		 
 
-		sqls.push("select * from score where " +  sqlWhere +" order by id desc limit " + ((pageIndex - 1)*pageSize + 1) + " , " + pageIndex*pageSize);
+		sqls.push("select * from score where " +  sqlWhere +" order by id desc limit " + (pageIndex - 1)*pageSize + " , " + pageSize);
 		params.push(sqlParam);
 		mqQueries.queries(sqls, params, function(err, results){
 				var page = new Object();

@@ -21,7 +21,7 @@ router.get('/score', function (req, res, next) {
   if(!req.session.score){ 					
 		res.redirect("/");
 	}
-  res.render('score', { title:'Home', score:  req.session.score});
+  res.render('score', { title:'score', score:  req.session.score});
 });
 
 
