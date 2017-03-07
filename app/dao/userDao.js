@@ -85,6 +85,12 @@ module.exports = {
 			sqlParam.push(user.username);
 		}
 
+		if(user.passwd){
+			user.passwd = encrypt(user.passwd, secret);
+			sqlWhere +=  (sqlWhere && sqlWhere != "" ? " and" : "")  +  " passwd = ? ";
+			sqlParam.push(user.passwd);
+		}
+
 		var sqls = [];
 		var params = [];
 

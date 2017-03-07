@@ -5,6 +5,9 @@
     <title>在线查分系统</title>
     <link rel="stylesheet" type="text/css" href="../stylesheets/login_framework.css">
 	  <link rel="stylesheet" type="text/css" href="../stylesheets/login.css">
+    <script type="text/javascript" src="../javascripts/js/jquery-1.8.0.min.js"></script>
+	  <script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+  	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/easyloader.js"></script>
   </head>
 
   <body class="logged-out env-production windows session-authentication page-responsive min-width-0">
@@ -26,7 +29,7 @@
       
 
     <div class="auth-form px-3" id="login">
-      <form accept-charset="UTF-8" action="/user/checkLogin" method="post">
+      <!--<form accept-charset="UTF-8" action="/user/checkLogin" method="post">-->
         <div class="auth-form-header p-0">
             <h1>在线查分系统</h1>
           </div>
@@ -34,22 +37,60 @@
           <div class="auth-form-body mt-3">
 
             <label for="login_field">
-              Username
+              用户名
             </label>
-            <input autocapitalize="off" autocorrect="off" autofocus="autofocus" class="form-control input-block" id="login_field" name="login" tabindex="1" type="text" />
+            <input autocapitalize="off" autocorrect="off" autofocus="autofocus" class="form-control input-block" id="username" name="username" tabindex="1" type="text" />
 
             <label for="password">
-              Password
+              密码
             </label>
             <input class="form-control form-control input-block" id="password" name="password" tabindex="2" type="password" />
-            <input class="btn btn-primary btn-block" data-disable-with="Signing in…" name="commit" tabindex="3" type="submit" value="Sign in" />
+            <input class="btn btn-primary btn-block" data-disable-with="Signing in…" name="commit" tabindex="3" type="submit" value="Sign in"  onclick="checkLogin()"/>
           </div>
-      </form>
-
+    <!-- </form> -->
+          <p class="create-account-callout mt-3" style="color:red;" id="err_message">
+          </p>
     </div>
 
     </div>
   </div>
   </body>
 </html>
+<script>
+  function checkLogin(){
+			var params = new Object();
+			params.username = $('#username').val();
+			params.passwd = $('#password').val();
+
+      if(!params.username || !params.passwd){
+        $('#err_message').html("请输入用户名和密码");
+        $('#err_message').show();
+        return;
+      }
+
+			 $.ajax({
+					url: '/user/checkLogin',
+					type: 'post',
+					data: params,
+					dataType: 'json',
+					success : function(data) {
+							if(data.code == 1){
+								location.href = '/admin';
+                $('#err_message').hide();
+							}else{
+                $('#err_message').show();
+								$('#err_message').html(data.message);
+							} 
+					},
+					error: function(data){ 
+
+					}
+				});
+
+  }
+
+  $(document).ready(function() {
+    $('#err_message').hide();
+  });
+</script>
 

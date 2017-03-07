@@ -34,7 +34,7 @@
 			</tr>
 		</thead>
 	</table>
-	<div class="easyui-dialog" id="dlg" style="width:480px;height:330px;padding:10px 10px;" closed="true" buttons="#dlg-buttons" data-options="" >
+	<div class="easyui-dialog" id="dlg" style="width:480px;height:330px;padding:10px 10px;margin:0 auto;" closed="true" buttons="#dlg-buttons" data-options="" >
 	<form action="" method="post" id="fm">
 		<table cellspacing="8px" align="center">
 			<tr>
@@ -73,6 +73,7 @@
 </body>
 </html>
 
+
 <script type="text/javascript">
 	var userInfo = {
 		query : function() {
@@ -84,7 +85,12 @@
 			});
 		},
         add : function() {
-			$("#dlg").dialog("open").dialog("setTitle","添加用户");
+			openDialog({
+				id : "dlg",
+				windowObj : window,
+				title : "导添加用户" 
+			});
+			//$("#dlg").window("open").window("setTitle","添加用户");
             dispValue(new Object());
         },
         modify : function() {
@@ -93,7 +99,12 @@
 				$.messager.alert("系统提示","请选择一条数据进行修改");
 				return;
 			}
-			$("#dlg").dialog("open").dialog("setTitle","修改用户信息");
+			openDialog({
+				id : "dlg",
+				windowObj : window,
+				title : "修改用户信息" 
+			});
+			//$("#dlg").dialog("open").dialog("setTitle","修改用户信息");
         },
 		del : function() {
 	    	var curRow = $('#dg').datagrid('getSelected');
@@ -140,6 +151,26 @@
 			dispValue(new Object());
 		}
 	};
+	
+	function openDialog(options) {
+		if (options.windowObj) {
+			$windowObj = null;
+			$windowObj = options.windowObj;
+		}
+		if (!options.id) {
+			options.id = "dlg";
+		}
+
+		$("#" + options.id).dialog("open").dialog("setTitle",options.title);
+
+		var top=(screen.height-options.height)/2-30 ;   
+		var left=(screen.width-options.width)/2;
+		$("#" + options.id).panel("move",{left:left,top:top});
+		$("#" + options.id).panel("move",{left:left,top:top});
+		$(".window-shadow").hide();
+	}
+
+	
 
     function dispValue(row){
         

@@ -290,8 +290,34 @@ router.get('/admin/login', function (req, res, next) {
   res.render('admin/login', { title: '登录' });
 });
 
-router.get('/user/checkLogin', function(req, res, next){
+router.post('/user/checkLogin', function(req, res, next){
+    var user = new Object();
+    if(req.query.username){
+      user.username = req.query.username;
+    };
+    if(req.body.username){
+      user.username = req.body.username;
+    }
 
+    if(req.query.passwd){
+      user.passwd = req.query.passwd;
+    };
+    if(req.body.passwd){
+      user.passwd = req.body.passwd;
+    }
+
+    if(!user.username || !user.passwd){
+      res.send({ "code": "0", "message": "请输入用户名和密码" });
+      return;
+    }
+
+    userDao.getUser(user, function(err, row){
+      if(err || row == null){
+        res.send({ "code": "0", "message": "用户名或密码错误" });
+      }else{
+        res.send({ "code": "1", "message": "成功" });
+      }
+    });
 });
 
 
@@ -299,8 +325,12 @@ router.get('/admin/charge', function (req, res, next) {
   res.render('admin/charge', { title: '收费管理' });
 });
 
+router.get('/admin/dialogTest', function (req, res, next) {
+  res.render('admin/dialogTest', { title: '收费管理' });
+});
+
 router.post('/admin/getChargeList', function(req, res, next){
-  var page = 1;
+    var page = 1;
     if(req.query.page){
       page = req.query.page;
     };
