@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>在线查分系统</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/login_framework.css">
+	  <link rel="stylesheet" type="text/css" href="../stylesheets/login.css">
+  </head>
+
+  <body class="logged-out env-production windows session-authentication page-responsive min-width-0">
+    
+
+  <div class="position-relative js-header-wrapper ">
+    <div id="js-pjax-loader-bar" class="pjax-loader-bar"><div class="progress"></div></div>
+      <div class="header header-logged-out width-full pt-5 pb-4" role="banner" style="height:48">
+      </div>
+  </div>
+
+  <div id="start-of-content" class="accessibility-aid"></div>
+
+
+
+  <div role="main">
+
+    <div id="js-pjax-container" data-pjax-container>
+      
+
+    <div class="auth-form px-3" id="login">
+      <form accept-charset="UTF-8" action="/user/checkLogin" method="post">
+        <div class="auth-form-header p-0">
+            <h1>在线查分系统</h1>
+          </div>
+
+          <div class="auth-form-body mt-3">
+
+            <label for="login_field">
+              Username
+            </label>
+            <input autocapitalize="off" autocorrect="off" autofocus="autofocus" class="form-control input-block" id="login_field" name="login" tabindex="1" type="text" />
+
+            <label for="password">
+              Password
+            </label>
+            <input class="form-control form-control input-block" id="password" name="password" tabindex="2" type="password" />
+            <input class="btn btn-primary btn-block" data-disable-with="Signing in…" name="commit" tabindex="3" type="submit" value="Sign in" />
+          </div>
+      </form>
+
+    </div>
+
+    </div>
+  </div>
+  </body>
+</html>
+

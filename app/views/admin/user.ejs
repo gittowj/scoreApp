@@ -8,12 +8,15 @@
     <script type="text/javascript" src="../javascripts/js/jquery-1.8.0.min.js"></script>
 	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
 	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/easyloader.js"></script>
+	<link rel="stylesheet" type="text/css" href="../javascripts/jquery-easyui-1.5.1/themes/icon.css">
+	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
 </head>
 <body>
     <div id="tb" class="dg_toolbar">
         <span>姓名:</span>
         <input type="text" id="quser_name"/>
-        <a href="javascript:void(0);" onclick="studentInfo.query()" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
+        <a href="javascript:void(0);" onclick="userInfo.query()" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
         <label>|</label>
         <a href="javascript:void(0);" onclick="userInfo.add()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">新增</a>
          <a href="javascript:void(0);" onclick="userInfo.modify()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">修改</a>
@@ -120,7 +123,7 @@
                     data: { 'id':  $("#id").val(), 'username':  $("#username").val(), 'passwd':  $("#passwd").val(), 'cname':  $("#cname").val(), 'email':  $("#email").val(), 'mobilenum':  $("#mobilenum").val()},
                     dataType: 'json',
                     success : function(data) {
-					    if(result.rtnCode == 1){
+					    if(data.rtnCode == 1){
                             $.messager.alert("系统提示","保存成功");
                             //$("#fm").form("reset");
                             $("#dlg").dialog("close");

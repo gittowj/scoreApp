@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>在线查分系统</title>
+    <link rel="stylesheet" type="text/css" href="../javascripts/jquery-easyui-1.5.1/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../javascripts/jquery-easyui-1.5.1/themes/icon.css">
+    <script type="text/javascript" src="../javascripts/js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/easyloader.js"></script>
+	<link rel="stylesheet" type="text/css" href="../javascripts/jquery-easyui-1.5.1/themes/icon.css">
+	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../javascripts/jquery-easyui-1.5.1/jquery.easyui.min.js"></script>
+</head>
+<body>
+    <div id="tb" class="dg_toolbar">
+        <span>学校:</span>
+        <input type="text" id="qcharge_school"/>
+        <span>学号:</span>
+        <input type="text" id="qcharge_no"/>
+        <span>姓名:</span>
+        <input type="text" id="qcharge_name"/>
+        <span>类型:</span>
+        <select id="qcharge_type">
+            <option value="0">--请选择--</option>
+			<option value="1">分数排名</option>
+			<option value="2">学费</option>
+		</select>
+        <a href="javascript:void(0);" onclick="chargeInfo.query()" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
+    </div>
+    <div id="tablePanel"></div>
+</body>
+</html>
+
+<script type="text/javascript">
+	var chargeInfo = {
+		query : function() {
+			$('#tablePanel').datagrid({
+				queryParams: {
+					'charge_school': $('#qcharge_school').val(),
+					'charge_no': $('#qcharge_no').val(),
+					'charge_name': $('#qcharge_name').val(),
+                    'charge_type' : $('#qcharge_type').val()
+				},
+				pageNumber: 1
+			});
+		},
+		load:function(){
+			$('#tablePanel').datagrid({
+				title : '收费列表',
+				animate:true,
+				nowrap : true,
+				autoRowHeight : false,
+				striped : true,
+				fitColumns : true,
+				fit : true,
+				collapsible : true,
+				url : '/admin/getChargeList',
+				remoteSort : false,
+	            singleSelect: true,
+	            columns:[[
+					{field:'id',title:'id',hidden:true,},
+					{field:'school', title:'学校', sortable:true, width:110,align:'center'},
+					{field:'no', title:'学号', sortable:true, width:100, align:'center'},
+					{field:'name', title:'姓名', sortable:true, width:100, align:'center'	},
+					{field:'type', title:'支付类型', sortable:true, width:120,align:'center',
+                        formatter: function(value,rowData,rowIndex) {
+                            if(value == 1){
+                                return "分数排名";
+                            }
+							return "学费";
+						}
+                    },
+					{field:'amount', title:'金额', sortable:true, width:50,align:'right'}
+				]],
+				pagination : true,
+				rownumbers : true,
+				toolbar : '#tb'
+			});
+        }
+		
+	};
+
+	 $(document).ready(function () {
+        chargeInfo.load();
+    });
+
+</script>

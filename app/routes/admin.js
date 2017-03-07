@@ -4,20 +4,14 @@ var fs = require('fs');
 var scoreDao = require('../dao/scoreDao');
 var studentDao = require('../dao/studentDao');
 var userDao = require('../dao/userDao');
+var chargeDao = require('../dao/chargeDao');
 var upload = require('../util/upload');
 var score = require('./score');
 
 module.exports = function(router){
-router.get('/jj', function (req, res, next) {
-  res.render('jj', { result: null });
-});
-  /* GET users listing. */
+/* GET users listing. */
 router.get('/admin', function (req, res, next) {
   res.render('admin/index', { title: 'hello world' });
-});
-
-router.get('/admin/score1', function (req, res, next) {
-  res.render('admin/score1', { title: 'hello world' });
 });
 
 router.get('/admin/student', function (req, res, next) {
@@ -274,7 +268,7 @@ router.post('/admin/getUserList', function(req, res, next){
     if(req.query.user_name){
       user.username = req.query.user_name;
     };
-    if(req.body.score_name){
+    if(req.body.user_name){
       user.username = req.body.user_name;
     }
 
@@ -290,4 +284,78 @@ router.post('/admin/getUserList', function(req, res, next){
          // res.render('admin/scorelist', { scores:scores});
     });
 });
+
+/* GET users listing. */
+router.get('/admin/login', function (req, res, next) {
+  res.render('admin/login', { title: '登录' });
+});
+
+router.get('/user/checkLogin', function(req, res, next){
+
+});
+
+
+router.get('/admin/charge', function (req, res, next) {
+  res.render('admin/charge', { title: '收费管理' });
+});
+
+router.post('/admin/getChargeList', function(req, res, next){
+  var page = 1;
+    if(req.query.page){
+      page = req.query.page;
+    };
+    if(req.body.page){
+      page = req.body.page;
+    }
+
+    var rowcount = 20;
+    if(req.query.rows){
+      rowcount = req.query.rows;
+    };
+    if(req.body.rows){
+      rowcount = req.body.rows;
+    }
+
+    var charge = new Object();
+    if(req.query.charge_school){
+      charge.school = req.query.charge_school;
+    };
+    if(req.body.charge_school){
+      charge.school = req.body.charge_school;
+    }
+
+    if(req.query.charge_no){
+      charge.no = req.query.charge_no;
+    };
+    if(req.body.charge_no){
+      charge.no = req.body.charge_no;
+    }
+
+    if(req.query.charge_name){
+      charge.name = req.query.charge_name;
+    };
+    if(req.body.charge_name){
+      charge.name = req.body.charge_name;
+    }
+
+    if(req.query.charge_type && req.query.charge_type != 0){
+      charge.type = req.query.charge_type;
+    };
+    if(req.body.charge_type && req.body.charge_type != 0){
+      charge.type = req.body.charge_type;
+    }
+
+
+    chargeDao.getChargeByPage(charge,page, rowcount, 0,function (err, result) {
+          if(err){
+            res.send(err);
+          }else{
+              res.json(result);
+          }
+
+         res.end();
+         // res.render('admin/scorelist', { scores:scores});
+    });
+});
+
 };

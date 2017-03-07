@@ -33,31 +33,31 @@ function decrypt(str, secret) {
 };
 
 module.exports = {
-	add: function (user, next) {
+	add: function (user, callback) {
         var createTime =  new Date();
         user.passwd = encrypt(user.passwd, secret);
 		// 建立连接，向表中插入值
 		mqQueries.queries([$sql.insert], [[user.username, user.passwd, user.cname, user.email, user.mobilenum, createTime]], function (err, result) {
-			next(err);
+			callback(err);
 		});
 	},
-    edit: function(user, next){
+    edit: function(user, callback){
         user.passwd = encrypt(user.passwd, secret);
         // 建立连接，向表中插入值
 		mqQueries.queries([$sql.update], [[user.username, user.passwd, user.cname, user.email, user.mobilenum]], function (err, result) {
-			nex(err);
+			callback(err);
 		});
     },
-	deleteById: function(id, next){
+	deleteById: function(id, callback){
 		mqQueries.queries([$sql.deleteById], [[id]], function (err) {
 			if (err) {
-				next(0);
+				callback(0);
 			}else{
-				next(1);
+				callback(1);
 			}
 		});
 	},
-	deleteByIds: function(ids, next){
+	deleteByIds: function(ids, callback){
 		if(ids == null || ids.length == 0){
 			return;
 		}
@@ -65,9 +65,9 @@ module.exports = {
 		mqQueries.query($sqlDelete, function (err) {
 			if(next){
 				if (err) {
-					next(0);
+					callback(0);
 				}else{
-					next(1);
+					callback(1);
 				}
 				
 			}
