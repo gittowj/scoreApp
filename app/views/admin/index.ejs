@@ -14,9 +14,14 @@
 </head>
 <body class="easyui-layout">
  /*   <button onclick="document.location='admin/student'">学生</button>*/
- /*   <button onclick="window.location='admin/score'">成绩</button>*/     
-        <div data-options="region:'center',iframe:true" title="&nbsp;">
-        		<div id="show_win" class="easyui-tabs" width="100%" height="99%"  fit=true>   
+   <button onclick="window.location='admin/score'">成绩</button> 
+ 		<div style="z-index:5555;position:relative; margin:-15px auto auto -10px; width:100%; font-size:14px; color:#4f6b72;" >
+		    <a href="/admin/logout" style=" float:right; margin:auto auto auto 5px;text-decoration:none;color:#4f6b72;"> 安全退出 </a>
+			<span style=" float:right">当前用户:<%= user.username %></span>
+		 </div>  
+        <div data-options="region:'center',iframe:true" title="&nbsp;" style="position:absoulte; ">
+				
+        		<div id="show_win" class="easyui-tabs" width="100%" height="99%"  fit=true >   
     				<div data-options="title:'学生管理'" style='width:100%;height:100%;overflow:hidden;'> 
       				  <iframe id="home" width="100%" height="99%" frameborder="0" src="admin/student"></iframe>
     				</div> 
@@ -28,9 +33,6 @@
     				</div> 
 					<div data-options="title:'收费管理'" style='width:100%;height:100%;overflow:hidden;'> 
       				  <iframe id="home" width="100%" height="99%" frameborder="0" src="/admin/charge"></iframe>
-    				</div>
-					<div data-options="title:'收费管理'" style='width:100%;height:100%;overflow:hidden;'> 
-      				  <iframe id="home" width="100%" height="99%" frameborder="0" src="/admin/dialogTest"></iframe>
     				</div>
 					
 				</div> 

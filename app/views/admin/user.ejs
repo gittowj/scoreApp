@@ -45,7 +45,7 @@
 			</tr>
 			<tr>
 				<td>密 码：</td>
-				<td><input type="text" id="passwd" name="passwd"  required="true"/><span style="color:red;">*</span></td>
+				<td><input type="password" id="passwd" name="passwd"  required="true"/><span style="color:red;">*</span></td>
 				<td>   </td>
 			</tr>
 			<tr>
@@ -88,7 +88,9 @@
 			openDialog({
 				id : "dlg",
 				windowObj : window,
-				title : "导添加用户" 
+				title : "导添加用户", 
+				height : 330,
+				width : 480
 			});
 			//$("#dlg").window("open").window("setTitle","添加用户");
             dispValue(new Object());
@@ -102,9 +104,12 @@
 			openDialog({
 				id : "dlg",
 				windowObj : window,
-				title : "修改用户信息" 
+				title : "修改用户信息",
+				height : 330,
+				width : 480				 
 			});
 			//$("#dlg").dialog("open").dialog("setTitle","修改用户信息");
+			dispValue(selectedrow);
         },
 		del : function() {
 	    	var curRow = $('#dg').datagrid('getSelected');
@@ -112,14 +117,17 @@
 	            $.messager.confirm('提示', '是否确认删除该行记录?', function (r) {
 	                if (r) {
 	                    $.ajax({
-	                        url: '/admin/deleteStudent',
+	                        url: '/admin/deleteUser',
 	                        type: 'post',
-	                        data: { 'student_id': curRow.id },
+	                        data: { 'id': curRow.id },
 	                        dataType: 'json',
 	                        success : function(data) {
-								$('#dg').datagrid("reload");
-                                $('#dg').datagrid('unselectAll');
-                                $.messager.show({ title: '提示', msg: data.rtnCode == 1 ? '删除成功！':'删除失败！' });
+								if(data.rtnCode == 1){
+									$('#dg').datagrid("reload");
+									$('#dg').datagrid('unselectAll');
+                                
+								}
+								$.messager.show({ title: '提示', msg: data.message });
 							}
 	                    });
 	                }
@@ -140,7 +148,7 @@
                             $("#dlg").dialog("close");
                             $("#dg").datagrid("reload");
                         }else{
-                            $.messager.alert("系统提示","保存失败");
+                            $.messager.alert("系统提示",data.message);
                             return;
                         }
                     }
@@ -162,9 +170,10 @@
 		}
 
 		$("#" + options.id).dialog("open").dialog("setTitle",options.title);
+;  
 
-		var top=(screen.height-options.height)/2-30 ;   
-		var left=(screen.width-options.width)/2;
+		var top=$(document).scrollTop() + ($(window).height()-options.height) * 0.5-30 ;   
+		var left=($(window).height()-options.width)/2;
 		$("#" + options.id).panel("move",{left:left,top:top});
 		$("#" + options.id).panel("move",{left:left,top:top});
 		$(".window-shadow").hide();

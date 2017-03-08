@@ -35,16 +35,14 @@ function decrypt(str, secret) {
 module.exports = {
 	add: function (user, callback) {
         var createTime =  new Date();
-        user.passwd = encrypt(user.passwd, secret);
 		// 建立连接，向表中插入值
-		mqQueries.queries([$sql.insert], [[user.username, user.passwd, user.cname, user.email, user.mobilenum, createTime]], function (err, result) {
+		mqQueries.queries([$sql.insert], [[user.username, encrypt(user.passwd, secret), user.cname, user.email, user.mobilenum, createTime]], function (err, result) {
 			callback(err);
 		});
 	},
     edit: function(user, callback){
-        user.passwd = encrypt(user.passwd, secret);
         // 建立连接，向表中插入值
-		mqQueries.queries([$sql.update], [[user.username, user.passwd, user.cname, user.email, user.mobilenum]], function (err, result) {
+		mqQueries.queries([$sql.update], [[user.username, encrypt(user.passwd, secret), user.cname, user.email, user.mobilenum, user.id]], function (err, result) {
 			callback(err);
 		});
     },
@@ -86,9 +84,8 @@ module.exports = {
 		}
 
 		if(user.passwd){
-			user.passwd = encrypt(user.passwd, secret);
 			sqlWhere +=  (sqlWhere && sqlWhere != "" ? " and" : "")  +  " passwd = ? ";
-			sqlParam.push(user.passwd);
+			sqlParam.push(encrypt(user.passwd, secret));
 		}
 
 		var sqls = [];
@@ -134,7 +131,12 @@ module.exports = {
 
 					var result_rowCount = results[0];
 					page.total = result_rowCount[0].count_all_result
-					page.rows = results[1];
+					page.rows = new Array();
+					results[1].forEach(function(user) {
+						user.passwd = decrypt(user.passwd, secret);
+						page.rows.push(user);
+					});
+					//page.rows = results[1];
 					page.totalPage = Math.ceil(page.total / page.size);
 
 				callback(err, page);
